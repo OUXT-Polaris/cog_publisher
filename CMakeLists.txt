@@ -58,6 +58,18 @@ target_link_libraries(cog_publisher_node ${catkin_LIBRARIES})
 ## Install ##
 #############
 
+# CPP Execution programs
+set(CPP_EXEC_NAMES cog_publisher_node)
+foreach(cpp_exec_names ${CPP_EXEC_NAMES})
+  install(TARGETS ${cpp_exec_names}
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    )
+endforeach(cpp_exec_names)
+# include header files
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
 # Install all files
 foreach(dir config launch)
   install(DIRECTORY ${dir}/
