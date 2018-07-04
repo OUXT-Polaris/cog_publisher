@@ -12,6 +12,7 @@
 #include <sensor_msgs/PointCloud.h>
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/Point32.h>
+#include <std_msgs/Float64.h>
 
 //headers fot tf2
 #include <tf2_ros/transform_listener.h>
@@ -57,6 +58,7 @@ cog_publisher::cog_publisher()
   }
   cog_links_pub = nh.advertise<sensor_msgs::PointCloud>("/cog/links", 1);
   cog_robot_pub = nh.advertise<geometry_msgs::PointStamped>("/cog/robot", 1);
+  total_mass_pub = nh.advertise<std_msgs::Float64>("/cog/total_mass", 1);
 }
 
 void cog_publisher::publish()
@@ -111,6 +113,10 @@ void cog_publisher::publish()
   cog_robot_pub.publish(cog_robot);
   //publish cog point of each link
   cog_links_pub.publish(cog_links_msg);
+  //publish total mass of the robot
+  std_msgs::Float64 total_mass_msg;
+  total_mass_msg.data = robot_total_mass;
+  total_mass_pub.publish(total_mass_msg);
 }
 
 cog_publisher::~cog_publisher()

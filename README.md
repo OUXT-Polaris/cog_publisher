@@ -30,3 +30,7 @@ center of gravity in each link
 message type :
 [geometry_msgs/PointStamped](http://docs.ros.org/jade/api/geometry_msgs/html/msg/PointStamped.html)  
 center of gravity in whole robot  
+- /cog/total_mass       
+message type :
+[std_msgs/Float64](http://docs.ros.org/lunar/api/std_msgs/html/msg/Float64.html)  
+total mass of the robot   

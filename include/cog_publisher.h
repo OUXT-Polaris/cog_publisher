@@ -24,7 +24,7 @@ private:
   ros::NodeHandle nh;
   std::vector<robot_link> links;
   //ros publisher and subscriber
-  ros::Publisher cog_links_pub,cog_robot_pub;
+  ros::Publisher cog_links_pub,cog_robot_pub,total_mass_pub;
   tf2_ros::Buffer* tf_buffer;
   tf2_ros::TransformListener* tf_listener;
   //parameters
