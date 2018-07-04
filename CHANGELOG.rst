@@ -2,8 +2,8 @@
 Changelog for package cog_publisher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2018-07-04)
+------------------
 * update dependencies
 * update package.xml
 * add build status in README.md
