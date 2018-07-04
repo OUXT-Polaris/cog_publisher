@@ -1,0 +1,2 @@
+publish_frame: base_link
+publish_rate: 50
