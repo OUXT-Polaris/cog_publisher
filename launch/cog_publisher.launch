@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
     <node pkg="cog_publisher" type="cog_publisher_node" name="cog_publisher_node" respawn="true" args="">
+        <rosparam command="load" file="$(find cog_publisher)/config/cog_publisher.yaml"/>
     </node>
 </launch>

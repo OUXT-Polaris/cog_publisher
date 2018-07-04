@@ -53,6 +53,9 @@ set(COG_PUBLISHER_SRC src/cog_publisher.cpp src/robot_link.cpp)
 add_executable(cog_publisher_node src/cog_publisher_node.cpp ${COG_PUBLISHER_SRC})
 target_link_libraries(cog_publisher_node ${catkin_LIBRARIES})
 
+add_executable(fake_cog_publisher_node src/fake_cog_publisher_node.cpp)
+target_link_libraries(fake_cog_publisher_node ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
