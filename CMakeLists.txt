@@ -10,13 +10,12 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   roscpp
-  rospy
   sensor_msgs
   std_msgs
   tf
   tf2
   tf2_ros
-  roslib
+  tf2_geometry_msgs
   urdf
   kdl_parser
   kdl_conversions
@@ -36,7 +35,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES cog_publisher
-  CATKIN_DEPENDS geometry_msgs kdl_parser kdl_conversions roscpp roslib rospy sensor_msgs std_msgs tf tf2 tf2_ros urdf
+  CATKIN_DEPENDS geometry_msgs roscpp sensor_msgs std_msgs tf tf2 tf2_ros tf2_geometry_msgs urdf kdl_parser kdl_conversions
 )
 
 ###########

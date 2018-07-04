@@ -3,7 +3,7 @@ calculate center of gravity from /robot_description parameters and /tf topic
 
 | *master* |
 |----------|
-|[![Build Status](https://travis-ci.org/OUXT-Polaris/cog_publisher.svg?branch=master)](https://github.com/OUXT-Polaris/cog_publisher)|
+|[![Build Status](https://travis-ci.org/OUXT-Polaris/cog_publisher.svg?branch=master)](https://travis-ci.org/OUXT-Polaris/cog_publisher)|
 
 #### topics and parameters  
 
