@@ -51,7 +51,19 @@ type : int
 default: 50  
 - ~total_mass
 type: double
-
+default: 100
+- ~cog_x  
+type: double  
+default: 0  
+center of gravitiy position in (~publish_frame) [m]
+- ~cog_y  
+type: double  
+default: 0  
+center of gravitiy position in (~publish_frame) [m]
+- ~cog_z  
+type: double  
+default: 0  
+center of gravitiy position in (~publish_frame) [m]
 ##### subscribe topics  
 - None
 

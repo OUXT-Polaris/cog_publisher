@@ -4,3 +4,7 @@ publish_frame: base_link
 publish_rate: 50
 # total mass of the robot [kg]
 total_mass: 100
+# center of gravitiy position in (~publish_frame) [m]
+cog_x: 0
+cog_y: 0
+cog_z: 0
