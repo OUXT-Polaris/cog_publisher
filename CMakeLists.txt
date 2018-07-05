@@ -61,7 +61,7 @@ target_link_libraries(fake_cog_publisher_node ${catkin_LIBRARIES})
 #############
 
 # CPP Execution programs
-set(CPP_EXEC_NAMES cog_publisher_node)
+set(CPP_EXEC_NAMES cog_publisher_node fake_cog_publisher_node)
 foreach(cpp_exec_names ${CPP_EXEC_NAMES})
   install(TARGETS ${cpp_exec_names}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
