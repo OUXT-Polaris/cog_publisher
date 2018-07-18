@@ -5,7 +5,8 @@
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
-#include <ignition/math/Vector3.hh>
+#include <gazebo/math/gzmath.hh>
+//#include <ignition/math/Vector3.hh>
 
 namespace gazebo
 {
@@ -36,6 +37,12 @@ namespace gazebo
             {
                 if (common::Time::GetWallTime() - this->prev_update_time < this->rate)
                     return;
+                for(auto link_itr = links.begin(); link_itr != links.end(); ++link_itr)
+                {
+                    physics::LinkPtr link_ptr = *link_itr;
+                    physics::InertialPtr inertial_ptr = link_ptr->GetInertial();
+                    math::Vector3 cog_pos = inertial_ptr->GetCoG();
+                }
                 this->prev_update_time = common::Time::GetWallTime();
             }
         private: 
