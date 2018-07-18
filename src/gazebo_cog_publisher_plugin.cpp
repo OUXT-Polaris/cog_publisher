@@ -1,0 +1,1 @@
+#include <gazebo_cog_publisher_plugin.h>

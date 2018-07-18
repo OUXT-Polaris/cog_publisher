@@ -19,9 +19,16 @@ find_package(catkin REQUIRED COMPONENTS
   urdf
   kdl_parser
   kdl_conversions
+  gazebo_ros
+  gazebo_plugins
 )
 
 find_package(Boost REQUIRED COMPONENTS system)
+
+## Gazebo
+find_package(gazebo REQUIRED)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS} -std=c++11 -Wall -Wextra")
 
 ###################################
 ## catkin specific configuration ##
@@ -35,7 +42,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES cog_publisher
-  CATKIN_DEPENDS geometry_msgs roscpp sensor_msgs std_msgs tf tf2 tf2_ros tf2_geometry_msgs urdf kdl_parser kdl_conversions
+  CATKIN_DEPENDS geometry_msgs roscpp sensor_msgs std_msgs tf tf2 tf2_ros tf2_geometry_msgs urdf kdl_parser kdl_conversions gazebo_ros gazebo_plugins
 )
 
 ###########
@@ -47,6 +54,11 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${GAZEBO_INCLUDE_DIRS}
+)
+link_directories(
+  ${GAZEBO_LIBRARY_DIRS}
+  ${catkin_LIBRARY_DIRS}
 )
 
 set(COG_PUBLISHER_SRC src/cog_publisher.cpp src/robot_link.cpp)
@@ -55,6 +67,9 @@ target_link_libraries(cog_publisher_node ${catkin_LIBRARIES})
 
 add_executable(fake_cog_publisher_node src/fake_cog_publisher_node.cpp)
 target_link_libraries(fake_cog_publisher_node ${catkin_LIBRARIES})
+
+add_library(gazebo_cog_publisher_plugin src/gazebo_cog_publisher_plugin.cpp)
+target_link_libraries(gazebo_cog_publisher_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 #############
 ## Install ##
