@@ -51,6 +51,9 @@ namespace gazebo
                     geometry_msgs::PointStamped cog_msg;
                     math::Vector3 total_cog_pos,local_cog_pos;
                     double total_mass = 0;
+                    total_cog_pos.x = 0;
+                    total_cog_pos.y = 0;
+                    total_cog_pos.z = 0;
                     for(auto link_itr = links.begin(); link_itr != links.end(); ++link_itr)
                     {
                         physics::LinkPtr link_ptr = *link_itr;
@@ -67,13 +70,25 @@ namespace gazebo
                         total_cog_pos.z = cog_pos.z * inertial_ptr->GetMass() / total_mass + total_cog_pos.z;
                     }
                     math::Pose reference_link_pose = reference_link->GetWorldPose();
+                    cog_msg.point.x = total_cog_pos.x;
+                    cog_msg.point.y = total_cog_pos.y;
+                    cog_msg.point.z = total_cog_pos.z;
+                    cog_msg.header.frame_id = reference_link_name;
+                    cog_msg.header.stamp.sec = now.sec;
+                    cog_msg.header.stamp.nsec = now.nsec;
+                    cog_pub.publish(cog_msg);
+                    std_msgs::Float64 total_mass_msg;
+                    total_mass_msg.data = total_mass;
+                    total_mass_pub.publish(total_mass_msg);
+                    /*
                     math::Matrix3 mat = quat_to_mat(reference_link_pose.rot);
-                    if(get_inv_mat(mat,mat))
+                    math::Matrix3 inv_mat;
+                    if(get_inv_mat(mat,inv_mat))
                     {
-                        local_cog_pos.x = total_cog_pos.x - reference_link_pose.pos.x;
-                        local_cog_pos.y = total_cog_pos.y - reference_link_pose.pos.y;
-                        local_cog_pos.z = total_cog_pos.z - reference_link_pose.pos.z;
-                        local_cog_pos = mat * local_cog_pos;
+                        local_cog_pos.x = total_cog_pos.x;// - reference_link_pose.pos.x;
+                        local_cog_pos.y = total_cog_pos.y;// - reference_link_pose.pos.y;
+                        local_cog_pos.z = total_cog_pos.z;// - reference_link_pose.pos.z;
+                        //local_cog_pos = inv_mat * local_cog_pos;
                         cog_msg.point.x = local_cog_pos.x;
                         cog_msg.point.y = local_cog_pos.y;
                         cog_msg.point.z = local_cog_pos.z;
@@ -85,10 +100,12 @@ namespace gazebo
                         total_mass_msg.data = total_mass;
                         total_mass_pub.publish(total_mass_msg);
                     }
+                    */
                     this->prev_update_time = now;
                 }
                 return;
             }
+            /*
             bool get_inv_mat(math::Matrix3 mat,math::Matrix3& inv_mat)
             {
                 math::Matrix3 ret;
@@ -98,15 +115,15 @@ namespace gazebo
                 {
                     return false;
                 }
-                inv_mat[0][0] =  mat[1][1]*mat[2][2] - mat[1][2]*mat[2][1];
-                inv_mat[0][1] = -mat[0][1]*mat[2][2] + mat[0][2]*mat[2][1];
-                inv_mat[0][2] =  mat[0][1]*mat[1][2] - mat[0][2]*mat[1][1];
-                inv_mat[1][0] = -mat[1][0]*mat[2][2] + mat[1][2]*mat[2][0];
-                inv_mat[1][1] =  mat[1][1]*mat[2][2] - mat[0][2]*mat[2][0];
-                inv_mat[1][2] = -mat[0][0]*mat[1][2] + mat[0][2]*mat[1][0];
-                inv_mat[2][0] =  mat[1][0]*mat[2][1] - mat[1][1]*mat[2][0];
-                inv_mat[2][1] = -mat[0][0]*mat[2][1] + mat[0][1]*mat[2][0];
-                inv_mat[2][2] =  mat[0][0]*mat[1][1] - mat[0][1]*mat[1][0];
+                inv_mat[0][0] =  (mat[1][1]*mat[2][2] - mat[1][2]*mat[2][1])/a;
+                inv_mat[0][1] = (-mat[0][1]*mat[2][2] + mat[0][2]*mat[2][1])/a;
+                inv_mat[0][2] =  (mat[0][1]*mat[1][2] - mat[0][2]*mat[1][1])/a;
+                inv_mat[1][0] = (-mat[1][0]*mat[2][2] + mat[1][2]*mat[2][0])/a;
+                inv_mat[1][1] =  (mat[1][1]*mat[2][2] - mat[0][2]*mat[2][0])/a;
+                inv_mat[1][2] = (-mat[0][0]*mat[1][2] + mat[0][2]*mat[1][0])/a;
+                inv_mat[2][0] =  (mat[1][0]*mat[2][1] - mat[1][1]*mat[2][0])/a;
+                inv_mat[2][1] = (-mat[0][0]*mat[2][1] + mat[0][1]*mat[2][0])/a;
+                inv_mat[2][2] =  (mat[0][0]*mat[1][1] - mat[0][1]*mat[1][0])/a;
                 return true;
             }
             math::Matrix3 quat_to_mat(math::Quaternion q)
@@ -132,6 +149,7 @@ namespace gazebo
                 math::Matrix3 ret(_v00,_v01,_v02,_v10,_v11,_v12,_v20,_v21,_v22);
                 return ret;
             }
+            */
         private: 
             physics::ModelPtr model;
             std::vector<physics::LinkPtr> links;
