@@ -39,51 +39,54 @@ namespace gazebo
                 reference_link = this->model->GetLink(reference_link_name);
 
                 // set connection
-                this->rate = common::Time(0, common::Time::SecToNano(1/publish_rate));
+                this->rate = common::Time((int32_t)0, (int32_t)common::Time::SecToNano(1.0/publish_rate));
                 this->prev_update_time = common::Time::GetWallTime();
                 this->update_connection = event::Events::ConnectWorldUpdateBegin(std::bind(&gazebo_cog_publisher_plugin::OnUpdate, this));
             }
             void OnUpdate()
             {
-                if (common::Time::GetWallTime() - this->prev_update_time <= this->rate)
-                    return;
-                geometry_msgs::PointStamped cog_msg;
-                math::Vector3 total_cog_pos,local_cog_pos;
-                double total_mass = 0;
-                for(auto link_itr = links.begin(); link_itr != links.end(); ++link_itr)
+                common::Time now = common::Time::GetWallTime();
+                if(now - this->prev_update_time >= this->rate)
                 {
-                    physics::LinkPtr link_ptr = *link_itr;
-                    physics::InertialPtr inertial_ptr = link_ptr->GetInertial();
-                    total_mass = total_mass + inertial_ptr->GetMass();
+                    geometry_msgs::PointStamped cog_msg;
+                    math::Vector3 total_cog_pos,local_cog_pos;
+                    double total_mass = 0;
+                    for(auto link_itr = links.begin(); link_itr != links.end(); ++link_itr)
+                    {
+                        physics::LinkPtr link_ptr = *link_itr;
+                        physics::InertialPtr inertial_ptr = link_ptr->GetInertial();
+                        total_mass = total_mass + inertial_ptr->GetMass();
+                    }
+                    for(auto link_itr = links.begin(); link_itr != links.end(); ++link_itr)
+                    {
+                        physics::LinkPtr link_ptr = *link_itr;
+                        physics::InertialPtr inertial_ptr = link_ptr->GetInertial();
+                        math::Vector3 cog_pos = inertial_ptr->GetCoG();
+                        total_cog_pos.x = cog_pos.x * inertial_ptr->GetMass() / total_mass + total_cog_pos.x;
+                        total_cog_pos.y = cog_pos.y * inertial_ptr->GetMass() / total_mass + total_cog_pos.y;
+                        total_cog_pos.z = cog_pos.z * inertial_ptr->GetMass() / total_mass + total_cog_pos.z;
+                    }
+                    math::Pose reference_link_pose = reference_link->GetWorldPose();
+                    math::Matrix3 mat = quat_to_mat(reference_link_pose.rot);
+                    if(get_inv_mat(mat,mat))
+                    {
+                        local_cog_pos.x = total_cog_pos.x - reference_link_pose.pos.x;
+                        local_cog_pos.y = total_cog_pos.y - reference_link_pose.pos.y;
+                        local_cog_pos.z = total_cog_pos.z - reference_link_pose.pos.z;
+                        local_cog_pos = mat * local_cog_pos;
+                        cog_msg.point.x = local_cog_pos.x;
+                        cog_msg.point.y = local_cog_pos.y;
+                        cog_msg.point.z = local_cog_pos.z;
+                        cog_msg.header.frame_id = reference_link_name;
+                        cog_msg.header.stamp.sec = now.sec;
+                        cog_msg.header.stamp.nsec = now.nsec;
+                        cog_pub.publish(cog_msg);
+                        std_msgs::Float64 total_mass_msg;
+                        total_mass_msg.data = total_mass;
+                        total_mass_pub.publish(total_mass_msg);
+                    }
+                    this->prev_update_time = now;
                 }
-                for(auto link_itr = links.begin(); link_itr != links.end(); ++link_itr)
-                {
-                    physics::LinkPtr link_ptr = *link_itr;
-                    physics::InertialPtr inertial_ptr = link_ptr->GetInertial();
-                    math::Vector3 cog_pos = inertial_ptr->GetCoG();
-                    total_cog_pos.x = cog_pos.x * inertial_ptr->GetMass() / total_mass + total_cog_pos.x;
-                    total_cog_pos.y = cog_pos.y * inertial_ptr->GetMass() / total_mass + total_cog_pos.y;
-                    total_cog_pos.z = cog_pos.z * inertial_ptr->GetMass() / total_mass + total_cog_pos.z;
-                }
-                math::Pose reference_link_pose = reference_link->GetWorldPose();
-                math::Matrix3 mat = quat_to_mat(reference_link_pose.rot);
-                if(get_inv_mat(mat,mat))
-                {
-                    local_cog_pos.x = total_cog_pos.x - reference_link_pose.pos.x;
-                    local_cog_pos.y = total_cog_pos.y - reference_link_pose.pos.y;
-                    local_cog_pos.z = total_cog_pos.z - reference_link_pose.pos.z;
-                    local_cog_pos = mat * local_cog_pos;
-                    cog_msg.point.x = local_cog_pos.x;
-                    cog_msg.point.y = local_cog_pos.y;
-                    cog_msg.point.z = local_cog_pos.z;
-                    cog_msg.header.frame_id = reference_link_name;
-                    cog_msg.header.stamp = ros::Time::now();
-                    cog_pub.publish(cog_msg);
-                    std_msgs::Float64 total_mass_msg;
-                    total_mass_msg.data = total_mass;
-                    total_mass_pub.publish(total_mass_msg);
-                }
-                this->prev_update_time = common::Time::GetWallTime();
                 return;
             }
             bool get_inv_mat(math::Matrix3 mat,math::Matrix3& inv_mat)
