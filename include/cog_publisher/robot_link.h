@@ -1,14 +1,14 @@
 #ifndef ROBOT_LINK_H_INCLUDED
 #define ROBOT_LINK_H_INCLUDED
 
-//headers for ROS
+//headers in ROS
 #include <geometry_msgs/Point32.h>
 #include <geometry_msgs/PointStamped.h>
 
-//headers fot tf2
+//headers in tf2
 #include <tf2_ros/transform_listener.h>
 
-//headers for urdf parser
+//headers in urdf parser
 #include <kdl_parser/kdl_parser.hpp>
 
 class RobotLink

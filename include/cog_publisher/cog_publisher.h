@@ -4,11 +4,26 @@
 //headers in this package
 #include <cog_publisher/robot_link.h>
 
-//headers for standard library
+//headers in standard library
 #include <vector>
+#include<iostream>
+#include<fstream>
 
-//headers for ROS
+//headers in ROS
 #include <ros/ros.h>
+#include <ros/package.h>
+#include <sensor_msgs/PointCloud.h>
+#include <geometry_msgs/PointStamped.h>
+#include <geometry_msgs/Point32.h>
+#include <std_msgs/Float64.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
+//headers in KDL
+#include <kdl_parser/kdl_parser.hpp>
+#include <kdl/tree.hpp>
+#include <kdl/kdl.hpp>
 
 class CogPublisher
 {

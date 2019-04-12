@@ -1,12 +1,6 @@
 //headers in this package
 #include <cog_publisher/robot_link.h>
 
-//headers fot tf2
-#include <tf2_ros/transform_listener.h>
-
-//headers for urdf parser
-#include <kdl_parser/kdl_parser.hpp>
-
 RobotLink::RobotLink(KDL::Vector cog_point,double mass,std::string frame)
 {
   this->mass = mass;
