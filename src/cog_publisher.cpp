@@ -2,7 +2,7 @@
 #include <cog_publisher/cog_publisher.h>
 #include <cog_publisher/robot_link.h>
 
-CogPublisher::CogPublisher()
+CogPublisher::CogPublisher() : tf_listener(tf_buffer)
 {
   std::string robot_description_text;
   //get publish_freme parameter
@@ -15,9 +15,6 @@ CogPublisher::CogPublisher()
   //parse urdf by using kdl_parser
   kdl_parser::treeFromString(robot_description_text, robot_tree);
   std::map<std::string,KDL::TreeElement> robot_segment = robot_tree.getSegments();
-  //making tf listener instance
-  tf_buffer = new tf2_ros::Buffer();
-  tf_listener = new tf2_ros::TransformListener(*tf_buffer);
   //initialize robot total mass
   robot_total_mass = 0;
   //iterate each link and get parameters
@@ -65,7 +62,7 @@ void CogPublisher::publish()
     //transform to /publish_frame(default base_link)
     try
     {
-      transform = tf_buffer->lookupTransform(publish_frame, cog_point.header.frame_id, ros::Time(0));
+      transform = tf_buffer.lookupTransform(publish_frame, cog_point.header.frame_id, ros::Time(0));
       tf2::doTransform(cog_point, cog_point, transform);
       //convert from geometry_msgs/PointStamped to geometry_msgs/Point32
       cog_link.x = cog_point.point.x;
@@ -88,6 +85,19 @@ void CogPublisher::publish()
   cog_robot.point.z = cog_robot_z;
   cog_robot.header.frame_id = publish_frame;
   cog_robot.header.stamp = now;
+  //broadcast COG frame
+  geometry_msgs::TransformStamped cog_transform_stamped;
+  cog_transform_stamped.header.stamp = now;
+  cog_transform_stamped.header.frame_id = publish_frame;
+  cog_transform_stamped.child_frame_id = "cog";
+  cog_transform_stamped.transform.translation.x = cog_robot_x;
+  cog_transform_stamped.transform.translation.y = cog_robot_y;
+  cog_transform_stamped.transform.translation.z = cog_robot_z;
+  cog_transform_stamped.transform.rotation.x = 0;
+  cog_transform_stamped.transform.rotation.y = 0;
+  cog_transform_stamped.transform.rotation.z = 0;
+  cog_transform_stamped.transform.rotation.w = 1;
+  tf_broadcaster.sendTransform(cog_transform_stamped);
   //publish cog point of robot (whole body)
   cog_robot_pub.publish(cog_robot);
   //publish cog point of each link

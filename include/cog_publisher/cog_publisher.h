@@ -40,8 +40,9 @@ private:
   std::vector<RobotLink> links;
   //ros publisher and subscriber
   ros::Publisher cog_links_pub,cog_robot_pub,total_mass_pub;
-  tf2_ros::Buffer* tf_buffer;
-  tf2_ros::TransformListener* tf_listener;
+  tf2_ros::Buffer tf_buffer;
+  tf2_ros::TransformListener tf_listener;
+  tf2_ros::TransformBroadcaster tf_broadcaster;
   //parameters
   std::string publish_frame;
   int publish_rate;

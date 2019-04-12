@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "com_publisher");
-  CogPublisher center_of_gravity_publisher = CogPublisher();
+  CogPublisher center_of_gravity_publisher;
   ros::Rate rate(center_of_gravity_publisher.getPublishRate());
   while(ros::ok())
   {
