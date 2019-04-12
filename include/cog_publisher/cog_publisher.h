@@ -18,8 +18,8 @@ public:
   //publish COG
   void publish();
   //parameter getter
-  inline int get_publish_rate(){return this->publish_rate;};
-  inline double get_robot_total_mass(){return this->robot_total_mass;};
+  inline int getPublishRate(){return this->publish_rate;};
+  inline double getRobotTotalMass(){return this->robot_total_mass;};
 private:
   ros::NodeHandle nh;
   std::vector<RobotLink> links;

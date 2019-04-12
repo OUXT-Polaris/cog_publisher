@@ -16,8 +16,8 @@ class RobotLink
 public:
   RobotLink(KDL::Vector cog_point,double mass,std::string frame);
   ~RobotLink();
-  geometry_msgs::PointStamped get_cog_point_stamped(){return this->cog_point;};
-  inline double get_mass(){return this->mass;};
+  geometry_msgs::PointStamped getCogPointStamped(){return this->cog_point;};
+  inline double getMass(){return this->mass;};
 private:
   geometry_msgs::PointStamped cog_point;
   double mass;

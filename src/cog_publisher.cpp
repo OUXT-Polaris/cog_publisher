@@ -81,7 +81,7 @@ void CogPublisher::publish()
     //transform data from this link frame to /publish_frame(default base_link)
     geometry_msgs::TransformStamped transform;
     //get link parameters
-    cog_point = link->get_cog_point_stamped();
+    cog_point = link->getCogPointStamped();
     cog_point.header.stamp = now;
     //transform to /publish_frame(default base_link)
     try
@@ -93,9 +93,9 @@ void CogPublisher::publish()
       cog_link.y = cog_point.point.y;
       cog_link.z = cog_point.point.z;
       cog_links_msg.points.push_back(cog_link);
-      cog_robot_x = link->get_mass()*cog_link.x/robot_total_mass + cog_robot_x;
-      cog_robot_y = link->get_mass()*cog_link.y/robot_total_mass + cog_robot_y;
-      cog_robot_z = link->get_mass()*cog_link.z/robot_total_mass + cog_robot_z;
+      cog_robot_x = link->getMass()*cog_link.x/robot_total_mass + cog_robot_x;
+      cog_robot_y = link->getMass()*cog_link.y/robot_total_mass + cog_robot_y;
+      cog_robot_z = link->getMass()*cog_link.z/robot_total_mass + cog_robot_z;
     }
     catch (tf2::TransformException &ex)
     {
