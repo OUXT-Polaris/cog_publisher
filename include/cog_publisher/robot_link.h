@@ -11,11 +11,11 @@
 //headers for urdf parser
 #include <kdl_parser/kdl_parser.hpp>
 
-class robot_link
+class RobotLink
 {
 public:
-  robot_link(KDL::Vector cog_point,double mass,std::string frame);
-  ~robot_link();
+  RobotLink(KDL::Vector cog_point,double mass,std::string frame);
+  ~RobotLink();
   geometry_msgs::PointStamped get_cog_point_stamped(){return this->cog_point;};
   inline double get_mass(){return this->mass;};
 private:

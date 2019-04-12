@@ -2,7 +2,7 @@
 #define COG_PUBLISHER_H_INCLUDED
 
 //headers in this package
-#include <robot_link.h>
+#include <cog_publisher/robot_link.h>
 
 //headers for standard library
 #include <vector>
@@ -10,11 +10,11 @@
 //headers for ROS
 #include <ros/ros.h>
 
-class cog_publisher
+class CogPublisher
 {
 public:
-  cog_publisher();
-  ~cog_publisher();
+  CogPublisher();
+  ~CogPublisher();
   //publish COG
   void publish();
   //parameter getter
@@ -22,7 +22,7 @@ public:
   inline double get_robot_total_mass(){return this->robot_total_mass;};
 private:
   ros::NodeHandle nh;
-  std::vector<robot_link> links;
+  std::vector<RobotLink> links;
   //ros publisher and subscriber
   ros::Publisher cog_links_pub,cog_robot_pub,total_mass_pub;
   tf2_ros::Buffer* tf_buffer;

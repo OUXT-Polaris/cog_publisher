@@ -1,6 +1,6 @@
 //headers in this package
-#include <cog_publisher.h>
-#include <robot_link.h>
+#include <cog_publisher/cog_publisher.h>
+#include <cog_publisher/robot_link.h>
 
 //headers for standard library
 #include<iostream>
@@ -23,7 +23,7 @@
 #include <kdl/tree.hpp>
 #include <kdl/kdl.hpp>
 
-cog_publisher::cog_publisher()
+CogPublisher::CogPublisher()
 {
   std::string robot_description_text;
   //get publish_freme parameter
@@ -52,7 +52,7 @@ cog_publisher::cog_publisher()
     double mass = rigid_body_inertia.getMass();
     //get Center of Gravity parameters
     KDL::Vector cog_point = rigid_body_inertia.getCOG();
-    robot_link link(cog_point,mass,link_name);
+    RobotLink link(cog_point,mass,link_name);
     links.push_back(link);
     robot_total_mass = robot_total_mass + mass;
   }
@@ -61,7 +61,7 @@ cog_publisher::cog_publisher()
   total_mass_pub = nh.advertise<std_msgs::Float64>("/cog/total_mass", 1);
 }
 
-void cog_publisher::publish()
+void CogPublisher::publish()
 {
   //cog of each links
   sensor_msgs::PointCloud cog_links_msg;
@@ -119,7 +119,7 @@ void cog_publisher::publish()
   total_mass_pub.publish(total_mass_msg);
 }
 
-cog_publisher::~cog_publisher()
+CogPublisher::~CogPublisher()
 {
 
 }
